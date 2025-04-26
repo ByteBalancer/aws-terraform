@@ -1,45 +1,25 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.96.0"
+    }
+  }
+}
+
 provider "aws" {
-  region = var.region
+  region                  = "ap-south-1"
+  Environment ="default"
 }
 
-provider "random" {}
+resource "aws_instance" "personal_ec2" {
+  ami           = "ami-084568db4383264d4" # Amazon Linux 2 AMI (Update this based on region)
+  instance_type = "t2.micro"              # Free tier gang 🤑
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  tags = {
+    Name = "MyPersonalEC2"
   }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
-resource "random_pet" "instance" {
-  length = 2
-}
-
-module "ec2-instance" {
-  source = "./modules/aws-ec2-instance"
-
-  ami_id        = data.aws_ami.ubuntu.id
-  instance_name = random_pet.instance.id
-}
-
-module "hello" {
-  source  = "joatmon08/hello/random"
-  version = "4.0.0"
-
-  hello        = "World"
-  second_hello = random_pet.instance.id
-
-  secret_key = "secret"
 }
