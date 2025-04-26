@@ -12,11 +12,10 @@ terraform {
 
 provider "aws" {
   region                  = "ap-south-1"
-  Environment ="default"
 }
 
 resource "aws_instance" "personal_ec2" {
-  ami           = "ami-084568db4383264d4" # Amazon Linux 2 AMI (Update this based on region)
+  ami = "ami-0c1a7f89451184c8b" # Amazon Linux 2 AMI (Update this based on region)
   instance_type = "t2.micro"              # Free tier gang 🤑
 
   tags = {
